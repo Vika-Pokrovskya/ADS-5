@@ -25,58 +25,45 @@ int prior(char s) {
 
 
 std::string infx2pstfx(std::string inf) {
-TStack<char, 100> stk;
-  std::string str = "";
-  bool flag = false;
-
+std::string a = "";
+  bool flag = true;
+  TStack<char, 100> stack1;
   for (int i = 0; i < inf.length(); i++) {
-    if (inf[i] == '(') {
-      flag = true;
+    if (prior(inf[i]) == inf[i]) {
+      a = a + inf[i] + ' ';
       continue;
-    }
-
-    if (inf[i] == ')' && !stk.isEmpty()) {
-      flag = false;
-      str.push_back(stk.pop());
-      str.push_back(' ');
-
-      if (!stk.isEmpty() && (stk.GetTop() == '*' || stk. GetTop() == '/')) {
-        str.push_back(stk.pop());
-        str.push_back(' ');
+    } else {
+      if (prior(inf[i]) == 0) {
+        stack1.Push(inf[i]);
+        continue;
       }
-
-      continue;
-    } else if (inf[i] == ')') {
-      flag = false;
-      continue;
-    }
-
-    if (!flag && (inf[i] == '+' || inf[i] == '-') && !stk.isEmpty() &&
-        (stk.GetTop() == '*' || stk.GetTop() == '/')) {
-      str.push_back(stk.pop());
-      str.push_back(' ');
-    }
-
-    if (inf[i] == '*' || inf[i] == '/' || inf[i] == '+' || inf[i] == '-') {
-      stk.Push(inf[i]);
-      continue;
-    }
-
-    if (isdigit(inf[i])) {
-      str.push_back(inf[i]);
-      str.push_back(' ');
-      continue;
+      if (stack1.isEmpty()) {
+        stack1.Push(inf[i]);
+        continue;
+      }
+      if (prior(inf[i]) > prior(stack1.get())) {
+        stack1.Push(inf[i]);
+        continue;
+      }
+      if (prior(inf[i]) <= prior(stack1.get()) && prior(inf[i]) != 0) {
+       a = a + stack1.get() + ' ';
+        stack1.pop();
+      }
+      if (prior(inf[i]) == 1) {
+        stack1.pop();
+      } else {
+        stack1.Push(inf[i]);
+      }
     }
   }
-
-  while (!stk.isEmpty()) {
-    str.push_back(stk.pop());
-    str.push_back(' ');
+  while (!stack1.isEmpty()) {
+   a = a + stack1.get();
+    stack1.pop();
+    if (!stack1.isEmpty()) {
+      a = a + ' ';
+    }
   }
-
-  str.pop_back();
-
-  return str;
+  return a;
   }
 
 int eval(std::string pref) {
