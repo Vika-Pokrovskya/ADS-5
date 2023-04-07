@@ -18,111 +18,98 @@ int prior(char s) {
       return 3;
     case '*':
       return 3;
-    case ' ':
-      return -101;
+    
   }
   return -1;
 }
 
+
 std::string infx2pstfx(std::string inf) {
-TStack<char, 100> st;
-    std::string l = "";
-    int nom = 0;
-    int p = -1;
+TStack<char, 100> stk;
+  std::string str = "";
+  bool flag = false;
 
-    for (auto& it : inf) {
-    nom =  prior(it);
-      p  = prior(st.poll());
-    if (nom == 1) { 
-         while (prior(st.poll()) > 0) {
-        l =l+ st.pop();
-        l =l+ " ";
-      }
-      st.pop();
+  for (int i = 0; i < inf.length(); i++) {
+    if (inf[i] == '(') {
+      flag = true;
+      continue;
+    }
 
-      l += it;
-      l += " ";
-    }   else if (nom == 1) {  
-      l += it;
-      l += " ";
-    } else if (nom > p || st.empty()) {
-      st.push(it);
-    } else if (nom == 0) {  
-      st.push(it);
-    } else if (nom <= p && nom > 1) {
-      while (prior(st.poll()) > 1) {
-        l += st.pop();
-        l = l + " ";
-      }
-      st.push(it);
-    }
-      if (it == '\n') {  
-        while (prior(st.poll()) > 1) {
-           l += st.pop();
-         l += " ";
-        }
-        st.pop();
-      }
-     
-    }
-    std::string out = "";
-    for (int i = 0; i < l.length() - 1; ++i) {
-      out =out+ l[i];
-    }
-    return out;
+    if (inf[i] == ')' && !stk.isEmpty()) {
+      flag = false;
+      str.push_back(stk.pop());
+      str.push_back(' ');
 
-    while (prior(st .poll()) > 1) {
-      l=l+ st .pop();
-     l =l+ " ";
+      if (!stk.isEmpty() && (stk.GetTop() == '*' || stk. GetTop() == '/')) {
+        str.push_back(stk.pop());
+        str.push_back(' ');
+      }
+
+      continue;
+    } else if (inf[i] == ')') {
+      flag = false;
+      continue;
     }
- }
-int operation(int x, int y, char it) {
-    switch (it) {
-      case '+':
-        return x + y;
-      case '-':
-        return x - y;
-      case '*':
-        return x * y;
-      case '/':
-        return x /y;
+
+    if (!flag && (inf[i] == '+' || inf[i] == '-') && !stk.isEmpty() &&
+        (stk.GetTop() == '*' || stk.GetTop() == '/')) {
+      str.push_back(stk.pop());
+      str.push_back(' ');
     }
-    return 0;
+
+    if (inf[i] == '*' || inf[i] == '/' || inf[i] == '+' || inf[i] == '-') {
+      stk.Push(inf[i]);
+      continue;
+    }
+
+    if (isdigit(inf[i])) {
+      str.push_back(inf[i]);
+      str.push_back(' ');
+      continue;
+    }
+  }
+
+  while (!stk.isEmpty()) {
+    str.push_back(stk.pop());
+    str.push_back(' ');
+  }
+
+  str.pop_back();
+
+  return str;
   }
 
 int eval(std::string pref) {
-  TStack<int, 100> stt;
-    for (char ch : pref) {
-     if (0 <(ch - '0')) {
-        int a = ch - '0';
-        stt.push(a);
-     }
-     if (ch == '+') {
-        int a = stt.pop();
-        a += stt.pop();
-        stt.push(a);
-     }
-     if (ch == '-') {
-        int a = stt.pop();
-        a = stt.pop() - a;
-        stt.push(a);
-     }
-     if (ch == '/') {
-        int a = stt.pop();
-        a = stt.pop() / a;
-        stt.push(a);
-     }
-     if (ch == '*') {
-        int a = stt.pop();
-        a *= stt.pop();
-        stt.push(a);
-     }
-      
-      
-     if (ch == ' ') {
-        continue;
-     }
+  TStack<int, 100> st2;
+  for (char a : pref) {
+    if (a == ' ') {
+      continue;
     }
-    return stt.poll();
-   
+    if (a == '+') {
+      int p = st2.pop();
+      p += st2.pop();
+      st2.Push(p);
+    }
+    if (a == '-') {
+      int p = st2.pop();
+      p = st2.pop() - p;
+      st2.Push(p);
+    }
+    if (a == '*') {
+      int p = st2.pop();
+      p *= st2.pop();
+      st2.Push(p);
+    }
+    if (a == '/') {
+      int p = st2.pop();
+      p = st2.pop() / p;
+      st2.Push(p);
+    }
+    if ((a - '0') > 0) {
+      int o = a - '0';
+      st2.Push(o);
+    }
+  }
+  return st2.get();
+ 
 }
