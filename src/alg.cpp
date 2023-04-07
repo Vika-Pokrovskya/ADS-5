@@ -91,41 +91,38 @@ int operation(int x, int y, char it) {
   }
 
 int eval(std::string pref) {
-   TStack<int, 100> stk;
-
-    int x = 0;
-    int y = 0;
-    int result = 0;
-    int z = 0;
-
-    for (int i = 0; i < pref.length(); i++) {
-     if (    isdigit(pref[i])) {
-        z += atoi(&pref[i]);
-        
-     } else if (pref[i] == ' ') {
-        if (z == 0) continue;
-        stk.push(z);
-        z = 0;
-
-      } else {
-        x = stk.pop();
-        y = stk.pop();
-        switch (pref[i]) {
-         case '+':
-           result = x + y;
-           break;
-         case '-':
-           result = x - y;
-           break;
-         case '/':
-           result = x / y;
-           break;
-         case '*':
-           result = x * y;
-           break;
-        }
-      }
-      return result;
-    } 
+  TStack<int, 100> stt;
+    for (char ch : pref) {
+     if (0 <(ch - '0')) {
+        int a = ch - '0';
+        stt.push(a);
+     }
+     if (ch == '+') {
+        int a = stt.pop();
+        a += stt.pop();
+        stt.push(a);
+     }
+     if (ch == '-') {
+        int a = stt.pop();
+        a = stt.pop() - a;
+        stt.push(a);
+     }
+     if (ch == '/') {
+        int a = stt.pop();
+        a = stt.pop() / a;
+        stt.push(a);
+     }
+     if (ch == '*') {
+        int a = stt.pop();
+        a *= stt.pop();
+        stt.push(a);
+     }
+      
+      
+     if (ch == ' ') {
+        continue;
+     }
+    }
+    return stt.poll();
    
 }
