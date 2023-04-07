@@ -25,45 +25,51 @@ int prior(char s) {
 
 
 std::string infx2pstfx(std::string inf) {
-std::string a = "";
-  bool flag = true;
-  TStack<char, 100> stack1;
-  for (int i = 0; i < inf.length(); i++) {
-    if (prior(inf[i]) == inf[i]) {
-      a = a + inf[i] + ' ';
-      continue;
-    } else {
-      if (prior(inf[i]) == 0) {
-        stack1.Push(inf[i]);
-        continue;
+ TStack<char, 100> stt;
+  std::string res;
+  int k = 0;
+  for (char a : inf) {
+    bool flag = 1;
+    if (prior(a) == -1) {
+      res += a;
+      res += ' ';
+      flag = 0;
+    }
+    if (prior(a) == 0) {
+      stt.Push(a);
+      flag = 0;
+    }
+    if (prior(a) > prior(stt.get())) {
+      stt .Push(a);
+      flag = 0;
+    }
+    if (stt.isEmpty() && prior(a) != -1) {
+      stt.Push(a);
+      flag = 0;
+    }
+    if (flag && a != ')') {
+      while (prior(stt.get()) >= prior(a)) {
+        res += stt.pop();
+        res += ' ';
       }
-      if (stack1.isEmpty()) {
-        stack1.Push(inf[i]);
-        continue;
+      stt.Push(a);
+    }
+    if (a == ')') {
+      while (stt.get() != '(') {
+        res += stt.pop();
+        res += ' ';
       }
-      if (prior(inf[i]) > prior(stack1.get())) {
-        stack1.Push(inf[i]);
-        continue;
-      }
-      if (prior(inf[i]) <= prior(stack1.get()) && prior(inf[i]) != 0) {
-       a = a + stack1.get() + ' ';
-        stack1.pop();
-      }
-      if (prior(inf[i]) == 1) {
-        stack1.pop();
-      } else {
-        stack1.Push(inf[i]);
+      stt.pop();
+    }
+    if (k == inf.size() - 1) {
+      while (!stt.isEmpty()) {
+        res += stt.pop();
+        if (stt.GetTop() != -1) res += ' ';
       }
     }
+    ++k;
   }
-  while (!stack1.isEmpty()) {
-   a = a + stack1.get();
-    stack1.pop();
-    if (!stack1.isEmpty()) {
-      a = a + ' ';
-    }
-  }
-  return a;
+  return res;
   }
 
 int eval(std::string pref) {
