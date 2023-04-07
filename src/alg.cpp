@@ -3,19 +3,7 @@
 #include <map>
 #include "tstack.h"
 
-int operation(int x, int y, char it) {
-    switch (it) {
-      case '+':
-        return x + y;
-      case '-':
-        return x - y;
-      case '*':
-        return x * y;
-      case '/':
-        return x /y;
-    }
-    return 0;
-  }
+ 
 int prior(char s) {
   switch (s) {
     case '(':
@@ -87,12 +75,23 @@ TStack<char, 100> st;
       l=l+ st .pop();
      l =l+ " ";
     }
-        
- 
-}
+ }
+int operation(int x, int y, char it) {
+    switch (it) {
+      case '+':
+        return x + y;
+      case '-':
+        return x - y;
+      case '*':
+        return x * y;
+      case '/':
+        return x /y;
+    }
+    return 0;
+  }
 
 int eval(std::string pref) {
- TStack<int, 100> stk;
+   TStack<int, 100> stk;
 
     int x = 0;
     int y = 0;
@@ -100,31 +99,33 @@ int eval(std::string pref) {
     int z = 0;
 
     for (int i = 0; i < pref.length(); i++) {
-      if (pref [i] != ' ' && isdigit(pref[i]) == 0) {
-        x = stk.pop();
-        y = stk.pop();
-        switch (pref[i]) {
-          case '+':
-            result = x + y;
-            break;
-          case '-':
-            result = x - y;
-            break;
-          case '/':
-            result = x / y;
-            break;
-          case '*':
-            result = x * y;
-            break;
-        }
-      } else if (isdigit(pref[i])) {
+     if (    isdigit(pref[i])) {
         z += atoi(&pref[i]);
-
-      } else {
+        
+     } else if (pref[i] == ' ') {
         if (z == 0) continue;
         stk.push(z);
         z = 0;
+
+      } else {
+        x = stk.pop();
+        y = stk.pop();
+        switch (pref[i]) {
+         case '+':
+           result = x + y;
+           break;
+         case '-':
+           result = x - y;
+           break;
+         case '/':
+           result = x / y;
+           break;
+         case '*':
+           result = x * y;
+           break;
+        }
       }
       return result;
-    }
+    } 
+   
 }
