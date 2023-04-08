@@ -3,9 +3,8 @@
 #include <map>
 #include "tstack.h"
 
- 
-int prior(char m) {
-  switch (m) {
+int prior(char s) {
+  switch (s) {
     case '(':
       return 0;
     case ')':
@@ -21,7 +20,6 @@ int prior(char m) {
   }
   return -1;
 }
-
 
 std::string infx2pstfx(std::string inf) {
   TStack<char, 100> stck1;
@@ -74,7 +72,7 @@ std::string infx2pstfx(std::string inf) {
 int eval(std::string pref) {
   TStack<int, 100> stck2;
   for (char k : pref) {
-      if (k == '+') {
+    if (k == '+') {
       int i = stck2.pop();
       i = i + stck2.pop();
       stck2.push(i);
@@ -98,7 +96,7 @@ int eval(std::string pref) {
       continue;
     }
     if ((k - '0') > 0) {
-      int i =k - '0';
+      int i = k - '0';
       stck2.push(i);
     }
   }
