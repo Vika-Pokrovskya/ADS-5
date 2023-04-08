@@ -4,32 +4,23 @@
 
 template<typename T, int size>
 class TStack {
-    private:
+  private:
   T mass[size] = {0};
-  ;
   int a;
 
  public:
-  TStack() {a = -1; }
-  void Push(const T& value) {
+  TStack() { a = -1; }
+  void push(const T& value) {
     if (full()) {
-      throw std::string(" full ");
-    }else{
-    mass[++a] = value;
+      throw std::string("  empty!");
+    } else {
+      mass[++a] = value;
     }
   }
   T pol() const { return mass[a]; }
-  T pop() {
-    if (empty()) {
-    throw std::string(" empty ");
-    }
-  else {
-    return mass[a--];
-  }
-  
-}
-  int  pri() const { return a; }
-  bool  empty() const { return a == -1; }
+  T pop() { return mass[a--]; }
+  int pri() const { return a; }
+  bool empty() const { return a == -1; }
   bool full() const { return a == size; }
 };
 
