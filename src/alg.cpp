@@ -4,8 +4,8 @@
 #include "tstack.h"
 
  
-int prior(char s) {
-  switch (s) {
+int prior(char m) {
+  switch (m) {
     case '(':
       return 0;
     case ')':
