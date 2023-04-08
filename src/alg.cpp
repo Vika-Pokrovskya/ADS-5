@@ -18,7 +18,6 @@ int prior(char s) {
       return 3;
     case '*':
       return 3;
-    
   }
   return -1;
 }
@@ -70,16 +69,12 @@ std::string infx2pstfx(std::string inf) {
     ++res;
   }
   return itog;
-  }
+}
 
 int eval(std::string pref) {
- TStack<int, 100> stck2;
-  
-  
-   
+  TStack<int, 100> stck2;
   for (char k : pref) {
-     
-    if (k == '+') {
+      if (k == '+') {
       int i = stck2.pop();
       i = i + stck2.pop();
       stck2.push(i);
