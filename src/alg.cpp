@@ -25,53 +25,46 @@ int prior(char s) {
 
 
 std::string infx2pstfx(std::string inf) {
- TStack<char, 100> stck;
-  int res = 0;
+  TStack<char, 100> stck1;
   std::string itog;
-  
+  int res = 0;
   for (char a : inf) {
-    bool  mar = true;
-    if (stck.empty() && prior(a) != -1) {
-      mar = false;
-      stck.Push(a);
-    }
+    bool iter = true;
     if (prior(a) == -1) {
-      mar = false;
       itog += a;
       itog += ' ';
-       
+      iter = false;
     }
     if (prior(a) == 0) {
-      mar = false;
-      stck.Push(a);
-      
+      stck1.push(a);
+      iter = false;
     }
-    if (prior(a) > prior(stck.pol())) {
-      mar = false;
-      stck.Push(a);
-       
+    if (prior(a) > prior(stck1.pol())) {
+      stck1.push(a);
+      iter = false;
     }
-    
-    if (mar && a != ')') {
-      while (prior(stck.pol()) >= prior(a)) {
-        itog += stck.pop();
+    if (stck1.empty() && prior(a) != -1) {
+      stck1.push(a);
+      iter = false;
+    }
+    if (iter && a != ')') {
+      while (prior(stck1.pol()) >= prior(a)) {
+        itog += stck1.pop();
         itog += ' ';
       }
-      stck.Push(a);
+      stck1.push(a);
     }
     if (a == ')') {
-      while (stck.pol() != '(') {
-        itog =itog+ stck.pop();
+      while (stck1.pol() != '(') {
+        itog += stck1.pop();
         itog += ' ';
       }
-      stck.pop();
+      stck1.pop();
     }
     if (res == inf.size() - 1) {
-      while (!stck.empty()) {
-        itog =itog+ stck.pop();
-        if (stck.pri() != -1) {
-          itog = itog +  ' ';
-        }
+      while (!stck1.empty()) {
+        itog += stck1.pop();
+        if (stck1.pri() != -1) itog += ' ';
       }
     }
     ++res;
@@ -80,39 +73,39 @@ std::string infx2pstfx(std::string inf) {
   }
 
 int eval(std::string pref) {
-  TStack<int, 100> stck2;
+ TStack<int, 100> stck2;
   
   
-  for ( char i:pref) {
-    if ((i - '0') > 0) {
-      int o = i - '0';
-      stck2.Push(o);
+   
+  for (char k : pref) {
+     
+    if (k == '+') {
+      int i = stck2.pop();
+      i = i + stck2.pop();
+      stck2.push(i);
     }
-    if (i == ' ') {
+    if (k == '-') {
+      int i = stck2.pop();
+      i = stck2.pop() - i;
+      stck2.push(i);
+    }
+    if (k == '/') {
+      int i = stck2.pop();
+      i = stck2.pop() / i;
+      stck2.push(i);
+    }
+    if (k == '*') {
+      int i = stck2.pop();
+      i = i * stck2.pop();
+      stck2.push(i);
+    }
+    if (k == ' ') {
       continue;
     }
-    if (i == '+') {
-      int p = stck2.pop();
-      p += stck2.pop();
-      stck2.Push(p);
+    if ((k - '0') > 0) {
+      int i =k - '0';
+      stck2.push(i);
     }
-    if (i == '-') {
-      int p = stck2.pop();
-      p = stck2.pop() - p;
-      stck2.Push(p);
-    }
-    if (i == '/') {
-      int p = stck2.pop();
-      p = stck2.pop() / p;
-      stck2.Push(p);
-    }
-    if (i == '*') {
-      int p = stck2.pop();
-      p *= stck2.pop();
-      stck2.Push(p);
-    }
-    
-    
   }
   return stck2.pol();
 }
