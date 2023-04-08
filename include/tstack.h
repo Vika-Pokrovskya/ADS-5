@@ -6,20 +6,31 @@ template<typename T, int size>
 class TStack {
     private:
   T mass[size] = {0};
+  ;
   int a;
 
  public:
   TStack() {a = -1; }
   void Push(const T& value) {
-    if (!isFull()) {
-      mass[++a] = value;
+    if (full()) {
+      throw std::string(" full ");
+    }else{
+    mass[++a] = value;
     }
   }
-  T      get() const { return mass[a]; }
-  T pop() { return mass[a--]; }
-  int GetTop() const { return a; }
-  bool isEmpty() const { return a == -1; }
-  bool isFull() const { return a == size; }
+  T pol() const { return mass[a]; }
+  T pop() {
+    if (empty()) {
+    throw std::string(" empty ");
+    }
+  else {
+    return mass[a--];
+  }
+  return mass[a--];
+}
+  int  pri() const { return a; }
+  bool  empty() const { return a == -1; }
+  bool full() const { return a == size; }
 };
 
 #endif  // INCLUDE_TSTACK_H_
