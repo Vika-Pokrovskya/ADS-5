@@ -26,7 +26,7 @@ class TStack {
   else {
     return mass[a--];
   }
-  return mass[a--];
+  
 }
   int  pri() const { return a; }
   bool  empty() const { return a == -1; }
